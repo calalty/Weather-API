@@ -2,13 +2,15 @@ const express = require('express');
 const hbs = require('express-handlebars')
 const app = express();
 const path = require('path')
-
+const bodyParser = require('body-parser');
+// npm i body-parser
 require('dotenv').config();
 
 const getWeather = require('./lib/openWeatherMap');
 
-const getNasaData = require('./lib/nasa')
-
+app.use(bodyParser.urlencoded({extended: false}));
+// ignore data types and make EVERYTHING a string
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.engine('.hbs', hbs({
@@ -18,26 +20,19 @@ app.engine('.hbs', hbs({
 
 app.set('view engine', 'hbs')
 
-app.get('/', async(req, res) => {
-    let data = await getWeather.getWeather()
-    console.log(data)
-    // let weatherInfo = {
-    // location: data.name,
-    // temp: Math.ceil(data.main.temp - 273.15),
-    // description: data.weather[0].description,
-    // clouds: data.clouds.all,
-    res.render('index', {data})
-});
-
-app.get('/nasa', async(req, res) => {
-    let data = await getNasaData.getNasaData()
-    let explanation = data.explanation
-    console.log(data)
-    res.render('nasa', {explanation})
+app.get('/', async (req, res) => {
+    res.render('weather');
 })
 
-app.get('/page2', (req, res) => {
-    res.send('I am the second page')
+app.post('/', async (req, res) => {
+    let city = req.body.city;
+    let data = await getWeather(city);
+    let name = data.name
+    let temp = data.main.temp;
+    res.render('weather', 
+    {data: 
+        {name, temp}
+    });
 })
 
 app.listen(3000, ()=> {
