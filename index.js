@@ -21,11 +21,12 @@ app.set('view engine', 'hbs')
 app.get('/', async(req, res) => {
     let data = await getWeather.getWeather()
     console.log(data)
-    let name = data.name
-    let temp = Math.ceil(data.main.temp - 273.15)
-    let description = data.weather[0].description
-    let clouds = data.clouds.all
-    res.render('index', {name, description, temp, clouds})
+    // let weatherInfo = {
+    // location: data.name,
+    // temp: Math.ceil(data.main.temp - 273.15),
+    // description: data.weather[0].description,
+    // clouds: data.clouds.all,
+    res.render('index', {data})
 });
 
 app.get('/nasa', async(req, res) => {

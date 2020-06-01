@@ -1,6 +1,19 @@
 
-<p class="place">{{name}}</p>
+{{!-- <p class="place">{{name}}</p>
 <div class="body">
 <p>Temperature: {{temp}}°C</p>
 <p>Cloud Coverage: {{clouds}}%</p>
-</div>
+</div> --}}
+
+<h1>Weather Info</h1>
+
+<ul>
+    {{#if data}}
+    {{#each data}}
+    <li>{{@key}} : {{this}}</li>
+    {{/each}}
+    {{else}}
+    <p>no data</p>
+    {{/if}}
+
+</ul>
